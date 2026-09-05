@@ -1,0 +1,13 @@
+{
+  "name": "calistenia-pro",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Quiz funnel Calistenia Pro — clon del funnel calisteniamilitar.site con marca y tracking propios",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
