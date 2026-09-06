@@ -29,53 +29,50 @@
 <!-- ============================================================= -->
 
 <div id="sp">
-  <div class="sp-bar"><div class="sp-bar-fill" id="spBar"></div></div>
-  <header class="sp-top">
-    <button class="sp-back" id="spBack" aria-label="Atrás">‹</button>
-    <span class="sp-logo" id="spLogo">CALISTENIA PRO</span>
-    <span class="sp-count" id="spCount"></span>
-  </header>
   <main class="sp-stage" id="spStage"></main>
+  <button class="sp-back-link" id="spBack">‹ Anterior</button>
 </div>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap');
 #sp,#sp *{box-sizing:border-box;margin:0;padding:0}
 #sp{
-  --bg:#0F110F; --bg2:#171A15; --card:#1B1F19; --card2:#222720; --line:#333F2E;
-  --ink:#F3F3EF; --soft:#9AA392;
-  --bronze:#3F6B34; --bronze2:#5FA648; --crimson:#A82A22; --crimson2:#B4362C;
+  --bg:#0A0A0A; --bg2:#111111; --card:#131313; --card2:#171717; --line:rgba(255,255,255,.10);
+  --ink:#FFFFFF; --soft:#A3A3A3;
+  --bronze:#4D6B4D; --bronze2:#5C7A5C; --crimson:#A82A22; --crimson2:#B4362C;
   --shadow:0 12px 34px rgba(0,0,0,.5);
   font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
   color:var(--ink);
   background:
-    radial-gradient(620px 380px at 80% -6%, rgba(63,107,52,.10), transparent 60%),
-    radial-gradient(520px 360px at 0% 100%, rgba(168,42,34,.10), transparent 55%),
-    linear-gradient(180deg,#120F0A,#0E0B07);
+    radial-gradient(600px 400px at 50% -8%, rgba(92,122,92,.10), transparent 60%),
+    #0A0A0A;
   max-width:520px; margin:0 auto; min-height:84vh; position:relative;
   border-radius:18px; overflow:hidden; -webkit-font-smoothing:antialiased;
 }
 #sp h1,#sp h2{font-family:'Oswald',sans-serif;font-weight:700;line-height:1.12;text-transform:uppercase;letter-spacing:.01em}
 #sp .cz{font-family:'Oswald',sans-serif}
 
-/* progress + header */
-#sp .sp-bar{height:5px;background:#241B10}
-#sp .sp-bar-fill{height:100%;width:0;background:linear-gradient(90deg,var(--crimson),var(--bronze) 70%,var(--bronze2));transition:width .45s cubic-bezier(.4,0,.2,1);box-shadow:0 0 12px rgba(63,107,52,.5)}
-#sp .sp-top{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;background:linear-gradient(180deg,rgba(27,21,14,.95),rgba(27,21,14,.7));border-bottom:1px solid var(--line);backdrop-filter:blur(4px)}
-#sp .sp-back{background:none;border:none;color:var(--soft);font-size:26px;line-height:1;cursor:pointer;width:30px;text-align:left;opacity:0;pointer-events:none;transition:opacity .2s}
-#sp .sp-back.show{opacity:1;pointer-events:auto}
-#sp .sp-logo{font-family:'Oswald',sans-serif;font-weight:800;font-size:16px;letter-spacing:.12em;color:var(--ink)}
-#sp .sp-logo::first-letter{color:var(--bronze2)}
-#sp .sp-count{font-size:11px;font-weight:700;color:var(--bronze);min-width:50px;text-align:right;letter-spacing:.04em}
+/* badge (paso 1) + meta de cuestionario (pasos 2+) */
+#sp .sp-badge{display:flex;align-items:center;gap:8px;width:max-content;margin:0 auto 18px;padding:6px 14px;background:rgba(92,122,92,.10);border:1px solid rgba(92,122,92,.25);border-radius:20px;font-family:'Oswald';font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--bronze2)}
+#sp .sp-badge .dot{width:7px;height:7px;border-radius:50%;background:var(--bronze2);box-shadow:0 0 8px var(--bronze2);animation:spDot 1.6s ease-in-out infinite}
+@keyframes spDot{0%,100%{opacity:1}50%{opacity:.35}}
+#sp .sp-meta{margin-bottom:20px}
+#sp .sp-meta-top{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:8px}
+#sp .sp-meta-tag{display:block;font-family:'Oswald';font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--bronze2);opacity:.8;margin-bottom:3px}
+#sp .sp-meta-q{font-family:'Oswald';font-weight:700;font-style:italic;font-size:19px;color:var(--ink);letter-spacing:-.01em}
+#sp .sp-meta-pct{font-family:monospace;font-size:12px;font-weight:700;color:var(--bronze2);background:rgba(92,122,92,.10);padding:3px 8px;border-radius:6px;height:max-content}
+#sp .sp-meta-bar{height:5px;background:rgba(255,255,255,.06);border-radius:8px;overflow:hidden}
+#sp .sp-meta-fill{height:100%;background:var(--bronze2);box-shadow:0 0 10px var(--bronze2);transition:width .5s cubic-bezier(.4,0,.2,1)}
 
-#sp .sp-stage{padding:24px 18px 42px;animation:spIn .4s cubic-bezier(.2,.7,.2,1)}
+#sp .sp-back-link{display:block;width:max-content;margin:16px auto 24px;background:none;border:none;color:var(--soft);font-family:'Oswald';font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .2s;padding:6px 10px}
+#sp .sp-back-link.show{opacity:.65;pointer-events:auto}
+#sp .sp-back-link:hover{opacity:1}
+
+#sp .sp-stage{padding:26px 18px 4px;animation:spIn .4s cubic-bezier(.2,.7,.2,1)}
 @keyframes spIn{from{opacity:0;transform:translateX(28px)}to{opacity:1;transform:none}}
 #sp::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;mix-blend-mode:overlay;background-image:repeating-linear-gradient(0deg,rgba(255,255,255,.012) 0 1px,transparent 1px 3px);z-index:0}
-#sp .sp-phase{animation:spPhase .6s ease}
-@keyframes spPhase{from{opacity:0;letter-spacing:.4em}to{opacity:1;letter-spacing:.22em}}
 
-/* phase chip + headings */
-#sp .sp-phase{display:block;text-align:center;font-family:'Oswald';text-transform:uppercase;letter-spacing:.22em;font-size:11px;color:var(--bronze);margin-bottom:10px}
+/* headings */
 #sp .sp-h{font-size:27px;text-align:center;margin-bottom:6px;line-height:1.14}
 #sp .sp-h .am{color:var(--bronze2)}
 #sp .sp-sub{text-align:center;color:var(--soft);font-size:14.5px;margin-bottom:22px}
@@ -83,11 +80,11 @@
 /* option cards */
 #sp .sp-grid{display:grid;gap:12px}
 #sp .sp-grid.cols2{grid-template-columns:1fr 1fr}
-#sp .sp-card{background:linear-gradient(165deg,var(--card2),var(--card));border:1.5px solid var(--line);border-radius:14px;overflow:hidden;cursor:pointer;transition:transform .18s,border-color .18s,box-shadow .18s;text-align:left;position:relative}
-#sp .sp-card:hover{transform:translateY(-3px);border-color:var(--bronze)}
+#sp .sp-card{background:rgba(255,255,255,.04);border:1.5px solid var(--line);border-radius:14px;overflow:hidden;cursor:pointer;transition:transform .18s,border-color .18s,box-shadow .18s;text-align:left;position:relative}
+#sp .sp-card:hover{transform:translateY(-3px);border-color:rgba(92,122,92,.5)}
 #sp .sp-card:active{transform:scale(.98)}
-#sp .sp-card.sel{border-color:var(--bronze2);box-shadow:0 0 0 2px var(--bronze2),0 0 22px rgba(95,166,72,.35);transform:translateY(-2px)}
-#sp .sp-thumb{width:100%;aspect-ratio:1/1;background:linear-gradient(150deg,#2A2114,#1A140C);display:flex;align-items:center;justify-content:center;color:#5C4F36;font-size:12px;text-align:center;padding:8px;font-weight:600}
+#sp .sp-card.sel{border-color:var(--bronze2);box-shadow:0 0 0 2px var(--bronze2),0 0 22px rgba(92,122,92,.35);transform:translateY(-2px)}
+#sp .sp-thumb{width:100%;aspect-ratio:1/1;background:linear-gradient(150deg,#1c1c1c,#101010);display:flex;align-items:center;justify-content:center;color:#555;font-size:12px;text-align:center;padding:8px;font-weight:600}
 #sp .sp-thumb img{width:100%;height:100%;object-fit:cover;display:block}
 #sp .sp-card.row{display:flex;align-items:center;gap:0;padding:0}
 #sp .sp-label{padding:13px 15px;font-weight:700;font-size:15.5px}
@@ -98,7 +95,7 @@
 #sp .sp-card.sel .sp-check{background:var(--bronze2);border-color:var(--bronze2);transform:scale(1.08)}
 
 /* buttons */
-#sp .sp-cta{display:block;width:100%;margin-top:22px;padding:17px;border:none;border-radius:13px;font-family:'Oswald',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:17px;color:#1A1206;cursor:pointer;background:linear-gradient(140deg,var(--bronze2),var(--bronze));box-shadow:0 10px 26px rgba(63,107,52,.32);transition:transform .15s,filter .2s;text-align:center;text-decoration:none;position:relative;overflow:hidden}
+#sp .sp-cta{display:block;width:100%;margin-top:22px;padding:17px;border:none;border-radius:13px;font-family:'Oswald',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:16px;color:#fff;cursor:pointer;background:var(--bronze2);box-shadow:0 10px 26px rgba(92,122,92,.32);transition:transform .15s,filter .2s;text-align:center;text-decoration:none;position:relative;overflow:hidden}
 #sp .sp-cta::after{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.45),transparent);transform:skewX(-20deg);animation:spShine 3.2s infinite}
 @keyframes spShine{0%{left:-60%}55%,100%{left:130%}}
 #sp .sp-cta:hover{transform:translateY(-2px);filter:brightness(1.05)}
@@ -107,12 +104,12 @@
 
 /* inputs */
 #sp .sp-input{width:100%;padding:17px;font-size:18px;text-align:center;font-family:inherit;color:var(--ink);background:var(--bg2);border:1.5px solid var(--line);border-radius:13px;outline:none}
-#sp .sp-input:focus{border-color:var(--bronze2);box-shadow:0 0 0 3px rgba(95,166,72,.18)}
-#sp .sp-input::placeholder{color:#6B5E45}
+#sp .sp-input:focus{border-color:var(--bronze2);box-shadow:0 0 0 3px rgba(92,122,92,.18)}
+#sp .sp-input::placeholder{color:#666}
 
 /* interstitial / empathy */
 #sp .sp-inter{text-align:center;padding:14px 0}
-#sp .sp-icon{width:80px;height:80px;border-radius:50%;margin:6px auto 18px;display:flex;align-items:center;justify-content:center;font-size:36px;background:radial-gradient(circle at 35% 30%,#3A2E1B,#1C150D);border:1.5px solid var(--bronze);box-shadow:0 0 26px rgba(63,107,52,.25)}
+#sp .sp-icon{width:80px;height:80px;border-radius:50%;margin:6px auto 18px;display:flex;align-items:center;justify-content:center;font-size:36px;background:radial-gradient(circle at 35% 30%,#1c1c1c,#101010);border:1.5px solid var(--bronze);box-shadow:0 0 26px rgba(92,122,92,.25)}
 #sp .sp-inter h1{font-size:25px;margin-bottom:12px}
 #sp .sp-inter h1 .am{color:var(--bronze2)}
 #sp .sp-inter p{color:var(--soft);font-size:15px;line-height:1.6;max-width:410px;margin:0 auto}
@@ -128,7 +125,7 @@
 #sp .sp-vs .tag{font-family:'Oswald';text-transform:uppercase;font-size:12px;letter-spacing:.06em;color:var(--soft)}
 #sp .sp-vs .big{font-family:'Oswald';font-weight:800;font-size:30px;margin:8px 0 2px}
 #sp .sp-vs.now .big{color:var(--crimson2)} #sp .sp-vs.goal .big{color:var(--bronze2)}
-#sp .sp-score{font-family:'Oswald';font-weight:800;font-size:58px;color:var(--bronze2);line-height:1;margin:8px 0;text-shadow:0 0 26px rgba(95,166,72,.3)}
+#sp .sp-score{font-family:'Oswald';font-weight:800;font-size:58px;color:var(--bronze2);line-height:1;margin:8px 0;text-shadow:0 0 26px rgba(92,122,92,.3)}
 #sp .sp-vsbox{display:flex;gap:12px;margin:18px 0}
 #sp .sp-vsbox > div{flex:1;background:linear-gradient(165deg,var(--card2),var(--card));border:1px solid var(--line);border-radius:14px;padding:15px 10px;text-align:center}
 #sp .sp-vsbox .lab{font-family:'Oswald';text-transform:uppercase;font-size:11px;letter-spacing:.06em;color:var(--soft)}
@@ -140,7 +137,7 @@
 #sp .sp-track2{height:14px;background:#241B10;border-radius:8px;overflow:hidden}
 #sp .sp-fill2{height:100%;width:0;border-radius:8px;transition:width 1.3s cubic-bezier(.2,.7,.2,1)}
 #sp .sp-fill2.now{background:linear-gradient(90deg,#7a2a22,var(--crimson2))}
-#sp .sp-fill2.goal{background:linear-gradient(90deg,var(--bronze),var(--bronze2));box-shadow:0 0 14px rgba(95,166,72,.4)}
+#sp .sp-fill2.goal{background:linear-gradient(90deg,var(--bronze),var(--bronze2));box-shadow:0 0 14px rgba(92,122,92,.4)}
 #sp .sp-attack{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--bronze);border-radius:12px;padding:15px 16px;margin:18px 0;text-align:left}
 #sp .sp-attack b{font-family:'Oswald';text-transform:uppercase;color:var(--bronze2);font-size:13px;display:block;margin-bottom:9px;letter-spacing:.03em}
 #sp .sp-attack .z{display:flex;align-items:center;gap:9px;font-size:14.5px;margin:6px 0;opacity:0;transform:translateX(-10px);transition:opacity .4s,transform .4s}
@@ -148,7 +145,7 @@
 #sp .sp-attack .z .ck{color:var(--bronze2);font-weight:800}
 #sp .sp-loader{text-align:center;padding:34px 0}
 #sp .sp-forge{font-size:42px;animation:spPulse 1s ease-in-out infinite}
-@keyframes spPulse{0%,100%{transform:scale(1);filter:drop-shadow(0 0 0 rgba(63,107,52,0))}50%{transform:scale(1.12);filter:drop-shadow(0 0 14px rgba(95,166,72,.6))}}
+@keyframes spPulse{0%,100%{transform:scale(1);filter:drop-shadow(0 0 0 rgba(92,122,92,0))}50%{transform:scale(1.12);filter:drop-shadow(0 0 14px rgba(92,122,92,.6))}}
 #sp .sp-ring{font-family:'Oswald';font-weight:800;font-size:44px;color:var(--bronze2);margin-top:10px}
 #sp .sp-ltrack{height:9px;background:#241B10;border-radius:6px;overflow:hidden;margin:18px 0}
 #sp .sp-lfill{height:100%;width:0;background:linear-gradient(90deg,var(--crimson),var(--bronze2));transition:width .25s}
@@ -157,9 +154,9 @@
 #sp .sp-timer{position:sticky;top:0;z-index:5;background:linear-gradient(90deg,var(--crimson),var(--crimson2));color:#fff;text-align:center;padding:11px;font-family:'Oswald';font-weight:700;text-transform:uppercase;letter-spacing:.04em;font-size:14px}
 #sp .sp-timer span{font-family:'Oswald';font-weight:800;margin-left:6px}
 #sp .sp-salebody{padding:26px 18px 42px}
-#sp .sp-hero-img{width:100%;aspect-ratio:16/10;border-radius:14px;overflow:hidden;background:linear-gradient(150deg,#2A2114,#1A140C);display:flex;align-items:center;justify-content:center;color:#5C4F36;font-size:13px;margin:14px 0;border:1px solid var(--line)}
+#sp .sp-hero-img{width:100%;aspect-ratio:16/10;border-radius:14px;overflow:hidden;background:linear-gradient(150deg,#1c1c1c,#101010);display:flex;align-items:center;justify-content:center;color:#555;font-size:13px;margin:14px 0;border:1px solid var(--line)}
 #sp .sp-hero-img img{width:100%;height:100%;object-fit:cover}
-#sp .sp-won{background:linear-gradient(140deg,#2C2316,#241D13);border:1px solid var(--bronze);border-radius:12px;padding:14px;text-align:center;margin-bottom:8px;box-shadow:0 0 22px rgba(63,107,52,.15)}
+#sp .sp-won{background:linear-gradient(140deg,#161816,#111311);border:1px solid var(--bronze);border-radius:12px;padding:14px;text-align:center;margin-bottom:8px;box-shadow:0 0 22px rgba(92,122,92,.15)}
 #sp .sp-won b{font-family:'Oswald';font-weight:800;color:var(--bronze2)}
 #sp .sp-sec{margin:26px 0}
 #sp .sp-sec-h{font-family:'Oswald';font-weight:800;text-transform:uppercase;font-size:20px;text-align:center;margin-bottom:16px;letter-spacing:.02em}
@@ -169,7 +166,7 @@
 #sp .sp-incl li .ck{color:var(--bronze2);font-weight:800;flex:none}
 #sp .sp-how{display:grid;gap:13px}
 #sp .sp-how .st{display:flex;gap:13px;align-items:flex-start}
-#sp .sp-how .num{width:40px;height:40px;flex:none;border-radius:50%;background:linear-gradient(140deg,var(--bronze2),var(--bronze));color:#1A1206;font-family:'Oswald';font-weight:800;font-size:18px;display:flex;align-items:center;justify-content:center}
+#sp .sp-how .num{width:40px;height:40px;flex:none;border-radius:50%;background:linear-gradient(140deg,var(--bronze2),var(--bronze));color:#0f120f;font-family:'Oswald';font-weight:800;font-size:18px;display:flex;align-items:center;justify-content:center}
 #sp .sp-how .st b{font-family:'Oswald';text-transform:uppercase;font-size:15.5px;display:block;margin-bottom:2px}
 #sp .sp-how .st p{color:var(--soft);font-size:13.5px;margin:0;line-height:1.45}
 #sp .sp-tst{display:grid;gap:12px}
@@ -180,7 +177,7 @@
 #sp .sp-tst .who b{font-family:'Oswald';text-transform:uppercase}
 #sp .sp-tst .who .res{color:var(--bronze2);font-weight:700}
 #sp .sp-tier{display:block;width:100%;text-align:left;background:linear-gradient(165deg,var(--card2),var(--card));border:1.5px solid var(--line);border-radius:14px;padding:16px;margin-bottom:12px;cursor:pointer;position:relative;transition:border-color .15s,box-shadow .15s}
-#sp .sp-tier.sel{border-color:var(--bronze2);box-shadow:0 0 0 2px var(--bronze2),0 0 18px rgba(95,166,72,.22)}
+#sp .sp-tier.sel{border-color:var(--bronze2);box-shadow:0 0 0 2px var(--bronze2),0 0 18px rgba(92,122,92,.22)}
 #sp .sp-tier.pop{border-color:var(--bronze)}
 #sp .sp-pop{position:absolute;top:-11px;left:16px;background:linear-gradient(140deg,var(--crimson2),var(--crimson));color:#fff;font-family:'Oswald';font-weight:700;text-transform:uppercase;font-size:11px;letter-spacing:.05em;padding:3px 11px;border-radius:20px}
 #sp .sp-tier-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
@@ -204,7 +201,7 @@
 #sp .sp-faq .it.open .q::after{content:'–'}
 #sp .sp-faq .a{max-height:0;overflow:hidden;transition:max-height .25s ease;color:var(--soft);font-size:13.5px;line-height:1.55}
 #sp .sp-faq .it.open .a{max-height:260px;padding-bottom:14px}
-#sp .sp-disc{font-size:10.5px;color:#6A5F48;text-align:center;margin-top:18px;line-height:1.5}
+#sp .sp-disc{font-size:10.5px;color:#666;text-align:center;margin-top:18px;line-height:1.5}
 #sp .sp-auth{text-align:center;margin:24px 0}
 #sp .sp-laurel{font-family:'Oswald';font-weight:800;font-size:36px;color:var(--bronze2);display:flex;align-items:center;justify-content:center;gap:10px}
 #sp .sp-laurel .lf{opacity:.85;font-size:30px}
@@ -228,8 +225,8 @@
 #sp .sp-sl-ticks{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);pointer-events:none}
 #sp .sp-sl-tick{position:absolute;width:2px;height:10px;background:var(--line);border-radius:1px;transform:translate(-50%,-50%)}
 #sp .sp-sl-tick.sp-sl-tick-filled{background:var(--bronze2);opacity:.5}
-#sp .sp-sl-thumb{position:absolute;top:50%;width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--bronze),var(--bronze2));box-shadow:0 0 0 3px var(--card),0 0 0 5px var(--bronze),0 4px 16px rgba(63,107,52,.45);transform:translate(-50%,-50%);transition:box-shadow .15s;cursor:grab;z-index:2}
-#sp .sp-sl-thumb:active{cursor:grabbing;box-shadow:0 0 0 3px var(--card),0 0 0 6px var(--bronze2),0 6px 24px rgba(95,166,72,.6)}
+#sp .sp-sl-thumb{position:absolute;top:50%;width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--bronze),var(--bronze2));box-shadow:0 0 0 3px var(--card),0 0 0 5px var(--bronze),0 4px 16px rgba(92,122,92,.45);transform:translate(-50%,-50%);transition:box-shadow .15s;cursor:grab;z-index:2}
+#sp .sp-sl-thumb:active{cursor:grabbing;box-shadow:0 0 0 3px var(--card),0 0 0 6px var(--bronze2),0 6px 24px rgba(92,122,92,.6)}
 #sp .sp-pj-wrap{font-family:inherit;width:100%;box-sizing:border-box;padding:0 0 8px}
 #sp .sp-pj-headline{color:var(--ink);font-size:1.1rem;font-weight:700;text-align:center;margin:0 0 12px;letter-spacing:.01em}
 #sp .sp-pj-svg{width:100%;display:block;overflow:visible}
@@ -242,6 +239,47 @@
 #sp .sp-gg-svg{width:100%;max-width:280px;display:block;margin:0 auto;overflow:visible}
 #sp .sp-gg-value{font-family:'Oswald',sans-serif;font-size:2.4rem;font-weight:700;color:var(--ink);line-height:1;text-align:center;margin-top:-18px}
 #sp .sp-gg-sublabel{font-size:.75rem;color:var(--soft);letter-spacing:.06em;text-align:center;margin-top:2px}
+
+/* ===== Regla/cinta métrica (altura, peso) ===== */
+#sp .sp-rl-wrap{display:flex;flex-direction:column;align-items:center;width:100%;padding:6px 0 2px;user-select:none;-webkit-user-select:none}
+#sp .sp-rl-val{font-family:'Oswald',sans-serif;font-size:3rem;font-weight:800;color:var(--ink);margin-bottom:10px;text-shadow:0 0 22px rgba(255,255,255,.2);line-height:1}
+#sp .sp-rl-val .u{font-size:1.05rem;font-weight:700;color:var(--bronze2);margin-left:5px;text-shadow:none;text-transform:uppercase}
+#sp .sp-rl-center{width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;position:relative;z-index:2}
+#sp .sp-rl-center.top{border-top:9px solid var(--bronze2);filter:drop-shadow(0 0 6px rgba(92,122,92,.7))}
+#sp .sp-rl-center.bot{border-bottom:9px solid var(--bronze2);filter:drop-shadow(0 0 6px rgba(92,122,92,.7))}
+#sp .sp-rl-track{position:relative;width:100%;height:92px;overflow:hidden;background:rgba(255,255,255,.03);border-radius:10px;cursor:grab}
+#sp .sp-rl-track:active{cursor:grabbing}
+#sp .sp-rl-inner{position:absolute;top:0;left:0;height:100%;will-change:transform}
+#sp .sp-rl-tick{position:absolute;top:0;left:0;height:100%}
+#sp .sp-rl-line{position:absolute;top:10px;left:-.5px;width:1px;height:22px;background:rgba(255,255,255,.14);border-radius:1px}
+#sp .sp-rl-line.mid{width:2px;height:36px;left:-1px;background:rgba(255,255,255,.3)}
+#sp .sp-rl-line.major{width:3px;height:54px;left:-1.5px;background:var(--ink)}
+#sp .sp-rl-label{position:absolute;top:66px;left:0;transform:translateX(-50%);font-size:10.5px;font-weight:700;color:var(--soft);font-family:monospace;white-space:nowrap}
+#sp .sp-rl-hint{margin-top:12px;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--soft);opacity:.65}
+
+/* ===== Loader tipo checklist ===== */
+#sp .sp-loader2{text-align:center}
+#sp .sp-lc-status{display:flex;justify-content:space-between;font-family:monospace;font-size:11px;text-transform:uppercase;color:var(--soft);margin:20px 0 8px;letter-spacing:.04em}
+#sp .sp-lc-status b{color:var(--bronze2)}
+#sp .sp-lc-list{display:grid;gap:10px;margin-top:24px;text-align:left}
+#sp .sp-lc-row{display:flex;align-items:center;gap:12px;padding:14px 16px;background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:11px;opacity:.45;transition:opacity .3s,border-color .3s}
+#sp .sp-lc-row.active{opacity:1;border-color:rgba(92,122,92,.45)}
+#sp .sp-lc-row.done{opacity:.8}
+#sp .sp-lc-ic{width:18px;flex:none;text-align:center;color:var(--bronze2);font-weight:700}
+#sp .sp-lc-label{font-family:'Oswald';font-size:12.5px;letter-spacing:.03em;font-weight:600}
+#sp .sp-lc-sub{display:block;font-family:monospace;font-size:10.5px;color:var(--soft);margin-top:2px;font-weight:400;letter-spacing:0}
+#sp .sp-lc-footer{margin-top:24px;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--soft);opacity:.5}
+
+/* ===== Recluta Aprobado + gate de video ===== */
+#sp .sp-report{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:14px;padding:16px;margin:20px 0;text-align:left}
+#sp .sp-report-top{display:flex;justify-content:space-between;font-family:monospace;font-size:11px;color:var(--soft);text-transform:uppercase;letter-spacing:.05em;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+#sp .sp-report-row{display:flex;gap:12px;align-items:flex-start;margin-bottom:14px}
+#sp .sp-report-row:last-child{margin-bottom:0}
+#sp .sp-report-row .ic{width:36px;height:36px;flex:none;border-radius:50%;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:16px}
+#sp .sp-report-row b{display:block;font-size:14px;margin-bottom:2px}
+#sp .sp-report-row p{color:var(--soft);font-size:12.5px;line-height:1.4;margin:0}
+#sp .sp-video-box{aspect-ratio:9/14;max-height:380px;margin:16px auto 0;background:rgba(255,255,255,.03);border:1px dashed var(--line);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:34px;color:var(--soft);gap:10px;text-align:center;padding:20px}
+#sp .sp-video-box span{font-size:12px;letter-spacing:.04em;max-width:220px;line-height:1.4}
 </style>
 
 <script>
@@ -288,6 +326,64 @@ function spSlider(opts){
     else if(e.key==='ArrowLeft'||e.key==='ArrowDown'){set(clamp(snap(cur-o.step)));e.preventDefault();}
   });
   wrap.getValue=function(){return cur;};
+  render();return wrap;
+}
+// Slider tipo "cinta métrica/regla": el centro queda fijo (marcado por los
+// dos triángulos) y la tira de marcas se desliza por debajo al arrastrar,
+// igual que el selector de altura/peso del funnel original.
+function spRuler(opts){
+  var o=Object.assign({min:0,max:100,value:50,step:1,unit:''},opts);
+  var cur=Math.min(o.max,Math.max(o.min,o.value));
+  var PX=40; // px por unidad, igual al original
+  var wrap=document.createElement('div');wrap.className='sp-rl-wrap';wrap.setAttribute('tabindex','0');
+  var val=document.createElement('div');val.className='sp-rl-val';
+  var capTop=document.createElement('div');capTop.className='sp-rl-center top';
+  var track=document.createElement('div');track.className='sp-rl-track';
+  var inner=document.createElement('div');inner.className='sp-rl-inner';
+  var capBot=document.createElement('div');capBot.className='sp-rl-center bot';
+  var hint=document.createElement('div');hint.className='sp-rl-hint';hint.textContent='Arrastra para ajustar';
+  var n=Math.round((o.max-o.min)/o.step);
+  for(var i=0;i<=n;i++){
+    var v=o.min+i*o.step;
+    var t=document.createElement('div');t.className='sp-rl-tick';t.style.left=(i*PX)+'px';
+    var major=(Math.round(v)%10===0), mid=(Math.round(v)%5===0);
+    var line=document.createElement('div');line.className='sp-rl-line'+(major?' major':mid?' mid':'');
+    t.appendChild(line);
+    if(major){ var lab=document.createElement('div');lab.className='sp-rl-label';lab.textContent=Math.round(v);t.appendChild(lab); }
+    inner.appendChild(t);
+  }
+  track.appendChild(inner);
+  wrap.appendChild(val);wrap.appendChild(capTop);wrap.appendChild(track);wrap.appendChild(capBot);wrap.appendChild(hint);
+  function render(){
+    val.innerHTML=cur+'<span class="u">'+(o.unit||'')+'</span>';
+    var offset=(cur-o.min)*PX;
+    // OJO: "50%" en translateX() se calcula sobre el ancho del propio elemento
+    // (que es enorme, son todas las marcas), no del track visible. Por eso
+    // medimos el ancho REAL del track en px y centramos con eso.
+    var half=track.clientWidth/2;
+    inner.style.transform='translateX('+(half-offset)+'px)';
+  }
+  function clampSnap(v){ v=Math.round((v-o.min)/o.step)*o.step+o.min; return Math.min(o.max,Math.max(o.min,v)); }
+  var dragging=false,startX=0,startVal=0,lastVal=cur;
+  function pos(e){ return e.touches?e.touches[0].clientX:e.clientX; }
+  function onDown(e){ dragging=true; startX=pos(e); startVal=cur; }
+  function onMove(e){ if(!dragging)return; var dx=pos(e)-startX; var v=clampSnap(startVal-dx/PX*o.step);
+    if(v!==lastVal){ lastVal=v; navigator.vibrate&&navigator.vibrate(6); } cur=v; render(); }
+  function onUp(){ dragging=false; }
+  track.addEventListener('mousedown',function(e){onDown(e);e.preventDefault();});
+  document.addEventListener('mousemove',onMove);
+  document.addEventListener('mouseup',onUp);
+  track.addEventListener('touchstart',function(e){onDown(e);},{passive:true});
+  document.addEventListener('touchmove',onMove,{passive:true});
+  document.addEventListener('touchend',onUp);
+  wrap.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key==='ArrowUp'){cur=clampSnap(cur+o.step);render();e.preventDefault();}
+    else if(e.key==='ArrowLeft'||e.key==='ArrowDown'){cur=clampSnap(cur-o.step);render();e.preventDefault();}
+  });
+  wrap.getValue=function(){return cur;};
+  // El track todavía no tiene ancho real (no está montado en el DOM) en el
+  // primer render(); se corrige apenas se monta, vía requestAnimationFrame.
+  wrap.refresh=render;
   render();return wrap;
 }
 function spProjection(opts){
@@ -418,27 +514,30 @@ var CONFIG = {
 };
 /* ================= FIN CONFIG (no toques abajo) ================= */
 
-var stage=document.getElementById('spStage'), bar=document.getElementById('spBar'),
-    backBtn=document.getElementById('spBack'), countEl=document.getElementById('spCount'),
-    logo=document.getElementById('spLogo');
-logo.innerHTML=CONFIG.BRAND;
+var stage=document.getElementById('spStage'), backBtn=document.getElementById('spBack');
 var _pop=CONFIG.TIERS.findIndex(function(t){return t.popular;});
 var state={ i:0, tier:_pop>=0?_pop:0, answers:{} };
 var STEPS=CONFIG.STEPS, TOTAL=STEPS.length;
 
 function thumb(img,label){ return img?'<div class="sp-thumb"><img src="'+img+'" alt="" loading="lazy" decoding="async"></div>':'<div class="sp-thumb">'+(label||'IMAGEN')+'</div>'; }
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
-function setProgress(){ var pct=Math.min(100,Math.round(state.i/TOTAL*100));
-  bar.style.width=pct+'%'; countEl.textContent=(state.i<TOTAL?'FASE '+(state.i+1)+'/'+TOTAL:'');
-  backBtn.classList.toggle('show', state.i>0 && state.i<TOTAL); }
+function metaBlock(){
+  var n=state.i+1, pct=Math.round(n/TOTAL*100);
+  return '<div class="sp-meta"><div class="sp-meta-top"><div><span class="sp-meta-tag">Cuestionario</span>'+
+    '<span class="sp-meta-q">Pregunta '+(n<10?'0'+n:n)+'</span></div>'+
+    '<span class="sp-meta-pct">'+pct+'%</span></div>'+
+    '<div class="sp-meta-bar"><div class="sp-meta-fill" style="width:'+pct+'%"></div></div></div>';
+}
+function updateBack(){ backBtn.classList.toggle('show', state.i>0 && state.i<TOTAL); }
 function go(n){ state.i=n; render(); window.scrollTo({top:0,behavior:'smooth'}); }
 backBtn.onclick=function(){ if(state.i>0) go(state.i-1); };
 
 function render(){
-  setProgress();
-  if(state.i>=TOTAL) return renderResult();
+  updateBack();
+  if(state.i>=TOTAL) return runLoader();
   var s=STEPS[state.i], html='';
-  if(s.phase) html+='<span class="sp-phase">'+esc(s.phase)+'</span>';
+  if(state.i===0) html+='<div class="sp-badge"><span class="dot"></span>Reclutamiento Abierto</div>';
+  else if(s.type!=='inter') html+=metaBlock();
   if(s.h) html+='<h1 class="sp-h">'+s.h+'</h1>';
   if(s.sub) html+='<p class="sp-sub">'+esc(s.sub)+'</p>';
 
@@ -468,7 +567,7 @@ function render(){
     });
     html+='</div>';
     if(s.type==='empathy') html+='<div id="spBox" style="display:none"><div class="sp-empathy"><b>'+esc(s.box.title)+'</b><p>'+esc(s.box.text)+'</p></div></div>';
-    html+='<button class="sp-cta" id="spNext" disabled>Continuar</button>';
+    html+='<button class="sp-cta" id="spNext" disabled>Continuar →</button>';
     stage.innerHTML=html; var picked={};
     stage.querySelectorAll('.sp-card').forEach(function(c){ c.onclick=function(){
       c.classList.toggle('sel'); picked[c.dataset.i]=c.classList.contains('sel');
@@ -482,9 +581,8 @@ function render(){
   }
   if(s.type==='inter'){
     html='';
-    if(s.phase) html+='<span class="sp-phase">'+esc(s.phase)+'</span>';
     html+='<div class="sp-inter"><div class="sp-icon">'+(s.icon||'🛡️')+'</div><h1>'+(s.h||'')+'</h1><p>'+esc(s.body||'')+'</p>'+(s.quote?'<p class="sp-quote">'+esc(s.quote)+'</p>':'')+'</div>';
-    html+='<button class="sp-cta" id="spNext">Continuar</button>';
+    html+='<button class="sp-cta" id="spNext">Continuar →</button>';
     stage.innerHTML=html; document.getElementById('spNext').onclick=function(){ go(state.i+1); };
     return;
   }
@@ -496,16 +594,17 @@ function render(){
     return;
   }
   if(s.type==='slider'){
-    html+='<div id="spSliderHost"></div><button class="sp-cta" id="spNext">Continuar</button>';
+    html+='<div id="spSliderHost"></div><button class="sp-cta" id="spNext">Continuar →</button>';
     stage.innerHTML=html;
-    var sl=spSlider({min:s.min,max:s.max,value:s.value,step:s.step||1,unit:s.unit||''});
+    var sl=spRuler({min:s.min,max:s.max,value:s.value,step:s.step||1,unit:s.unit||''});
     document.getElementById('spSliderHost').appendChild(sl);
+    requestAnimationFrame(function(){ sl.refresh(); });
     document.getElementById('spNext').onclick=function(){ state.answers[s.key||state.i]=sl.getValue(); go(state.i+1); };
     return;
   }
   if(s.type==='input'){
     html+='<input class="sp-input" id="spInput" placeholder="'+esc(s.placeholder||'')+'" autocomplete="off">';
-    html+='<button class="sp-cta" id="spNext" disabled>Continuar</button>';
+    html+='<button class="sp-cta" id="spNext" disabled>Continuar →</button>';
     stage.innerHTML=html;
     var inp=document.getElementById('spInput'), nx=document.getElementById('spNext'); inp.focus();
     inp.oninput=function(){ nx.disabled=!inp.value.trim(); };
@@ -515,52 +614,73 @@ function render(){
   }
 }
 
-function renderResult(){
-  bar.style.width='100%'; countEl.textContent=''; backBtn.classList.remove('show');
-  var A=state.answers;
-  var goalNow=A.goal||'', bodyGoalNow=A.bodygoal||'';
-  var nivel=A.nivel||'Recluta';
-  var zonas=Array.isArray(A.zonas)?A.zonas:[];
-  var zHtml=zonas.length?('<div class="sp-attack"><b>Tu Protocolo Militar también ataca:</b>'+
-    zonas.map(function(z){return '<div class="z"><span class="ck">✔</span><span>'+esc(z)+'</span></div>';}).join('')+'</div>'):'';
-  // peso/altura -> proyección + potencial
-  var peso=parseFloat(A.peso)||85, meta=parseFloat(A.pesoMeta)||78;
-  if(meta>=peso) meta=Math.max(45, peso-5);
-  var diff=Math.max(1, peso-meta);
-  var weeks=Math.min(24, Math.max(4, Math.round(diff/0.7)));
-  var nivelScore={'Recluta':70,'Soldado':80,'Veterano':88}[nivel]||76;
-  var potential=Math.min(96, nivelScore + zonas.length*2 + 6);
-  stage.style.padding='24px 18px 42px';
-  stage.innerHTML='<div class="sp-result"><span class="sp-phase">Tu veredicto'+(A.name?' · '+esc(A.name):'')+'</span>'+
-    '<h1 class="sp-h">Tu potencial <span class="am">táctico</span></h1>'+
-    '<div id="spGaugeHost"></div>'+
-    '<p class="sp-sub">Tu perfil cumple con los requisitos para el Protocolo de Fuerzas Especiales. Solo falta activar tu misión.</p>'+
-    ((goalNow||bodyGoalNow)?('<div class="sp-vsbox"><div class="nowb"><span class="lab">Tu objetivo</span><div class="v" style="font-size:14px">'+esc(goalNow||'—')+'</div></div>'+
-    '<div class="goalb"><span class="lab">Enfoque</span><div class="v">'+esc(bodyGoalNow||'—')+'</div></div></div>'):'')+
-    '<div id="spProjHost" style="margin:22px 0 6px"></div>'+
-    zHtml+
-    '<button class="sp-cta" id="spBuild">Ver mi protocolo</button></div>';
-  document.getElementById('spGaugeHost').appendChild(spGauge({value:potential, label:'', sublabel:'sobre 100 · potencial de combate'}));
-  document.getElementById('spProjHost').appendChild(spProjection({fromKg:peso, toKg:meta, weeks:weeks, unit:'kg', name:A.name, targetDateLabel:'En '+weeks+' sem'}));
-  var zs=stage.querySelectorAll('.sp-attack .z');
-  zs.forEach(function(z,idx){ setTimeout(function(){ z.classList.add('in'); }, 700+idx*130); });
-  document.getElementById('spBuild').onclick=runLoader;
-}
+// Loader tipo checklist (igual al del funnel original): una lista de pasos
+// que se van tildando en vivo mientras avanza una barra de progreso.
 function runLoader(){
-  stage.innerHTML='<div class="sp-loader"><div class="sp-forge">⚒️</div><div class="sp-ring" id="spPct">0%</div>'+
+  backBtn.classList.remove('show');
+  var steps=['Analisando perfil táctico','Generando protocolo militar','Preparando tu misión de 21 días','Finalizando tu reclutamiento'];
+  var rows=steps.map(function(t,idx){
+    return '<div class="sp-lc-row" data-i="'+idx+'"><span class="sp-lc-ic">○</span><span class="sp-lc-label">'+esc(t.toUpperCase())+'</span></div>';
+  }).join('');
+  stage.style.padding='26px 18px 4px';
+  stage.innerHTML='<div class="sp-loader2">'+
+    '<div class="sp-badge"><span class="dot"></span>Protocolo: 2026</div>'+
+    '<h1 class="sp-h">Procesando <span class="am">reclutamiento</span></h1>'+
+    '<p class="sp-sub">Verificando compatibilidad operativa...</p>'+
+    '<div class="sp-lc-status"><span>Estado: <b id="spLState">Analizando</b></span><span id="spLPct">0%</span></div>'+
     '<div class="sp-ltrack"><div class="sp-lfill" id="spLF"></div></div>'+
-    '<p class="sp-sub" id="spLT">Procesando tu reclutamiento…</p></div>';
-  var p=0, msgs=[[0,'Procesando tu reclutamiento…'],[35,'Analizando tu perfil táctico…'],[70,'Generando tu protocolo militar…'],[92,'Preparando tu misión de 21 días…']];
-  var pctEl=document.getElementById('spPct'),lf=document.getElementById('spLF'),lt=document.getElementById('spLT');
-  var iv=setInterval(function(){ p+=Math.random()*7+2; if(p>=100)p=100;
-    pctEl.textContent=Math.floor(p)+'%'; lf.style.width=p+'%';
-    for(var k=msgs.length-1;k>=0;k--){ if(p>=msgs[k][0]){ lt.textContent=msgs[k][1]; break; } }
-    if(p>=100){ clearInterval(iv); setTimeout(renderSale,550); } },180);
+    '<div class="sp-lc-list">'+rows+'</div>'+
+    '<p class="sp-lc-footer">Sistema seguro // Acceso limitado</p></div>';
+  var rowsEl=stage.querySelectorAll('.sp-lc-row'), n=rowsEl.length;
+  var p=0;
+  var iv=setInterval(function(){
+    p+=Math.random()*6+2; if(p>=100)p=100;
+    document.getElementById('spLPct').textContent=Math.floor(p)+'%';
+    document.getElementById('spLF').style.width=p+'%';
+    var active=Math.min(n-1, Math.floor(p/100*n));
+    rowsEl.forEach(function(r,idx){
+      var ic=r.querySelector('.sp-lc-ic');
+      if(idx<active){ r.classList.add('done'); r.classList.remove('active'); ic.textContent='✓'; }
+      else if(idx===active){ r.classList.add('active'); ic.textContent='●'; }
+    });
+    if(p>=100){
+      clearInterval(iv);
+      rowsEl.forEach(function(r){ r.classList.add('done'); r.classList.remove('active'); r.querySelector('.sp-lc-ic').textContent='✓'; });
+      setTimeout(renderApproved,550);
+    }
+  },180);
+}
+// Pantalla "RECLUTA APROBADO" (igual a la del funnel original): informe
+// final con 3 features + botón para pasar al gate de video.
+function renderApproved(){
+  stage.style.padding='24px 18px 42px';
+  var id='#'+Math.floor(10+Math.random()*89)+'X-'+Math.floor(100+Math.random()*899);
+  stage.innerHTML='<div class="sp-approved">'+
+    '<div class="sp-icon" style="margin:0 auto 18px">🎖️</div>'+
+    '<h1 class="sp-h">Recluta <span class="am">Aprobado</span></h1>'+
+    '<p class="sp-sub">Tu perfil cumple con los requisitos para el Protocolo de Fuerzas Especiales.</p>'+
+    '<div class="sp-report">'+
+      '<div class="sp-report-top"><span>Informe Final</span><span>ID: '+id+'</span></div>'+
+      '<div class="sp-report-row"><span class="ic">📋</span><div><b>Protocolo Generado</b><p>Plan de entrenamiento adaptado a tu biotipo y objetivos actuales.</p></div></div>'+
+      '<div class="sp-report-row"><span class="ic">🎥</span><div><b>Acceso a Videos</b><p>Biblioteca técnica con ejecución correcta de cada movimiento.</p></div></div>'+
+      '<div class="sp-report-row"><span class="ic">🔥</span><div><b>Garantía de Resultados</b><p>Método probado en campo con tasa de éxito del 98%.</p></div></div>'+
+    '</div>'+
+    '<button class="sp-cta" id="spAccess">Acceder al Protocolo 🔓</button></div>';
+  document.getElementById('spAccess').onclick=renderVideoGate;
+}
+// Gate de video (placeholder hasta tener el video real) con botón para
+// saltarlo y pasar directo a la oferta.
+function renderVideoGate(){
+  stage.style.padding='24px 18px 42px';
+  stage.innerHTML='<div class="sp-videogate">'+
+    '<p class="sp-sub">Tu video ha comenzado, míralo y desbloqueá el protocolo.</p>'+
+    '<div class="sp-video-box">🎥<span>Video próximamente<br>(placeholder)</span></div>'+
+    '<button class="sp-cta" id="spSkipVideo" style="margin-top:20px">Continuar sin ver el video →</button></div>';
+  document.getElementById('spSkipVideo').onclick=renderSale;
 }
 
 function renderSale(){
-  document.querySelector('#sp .sp-bar').style.display='none';
-  document.querySelector('#sp .sp-top').style.display='none';
+  backBtn.style.display='none';
   var name=state.answers.name?esc(state.answers.name):'recluta';
   var brand=esc(CONFIG.BRAND_PLAIN);
   var hero=CONFIG.IMG.sale_hero?'<img src="'+CONFIG.IMG.sale_hero+'" alt="">':'IMAGEN ANTES / DESPUÉS';
