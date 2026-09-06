@@ -364,8 +364,8 @@ var CONFIG = {
   STORE: "",                                     // TODO: pegar la URL de checkout/tienda cuando esté lista
   TIMER_MIN: 10,
 
-  // Imágenes de la oferta. Vacío "" = placeholder (sumar fotos propias antes de lanzar).
-  IMG: { sale_hero: "", program: "" },           // sale_hero = antes/después · program = mockup de la app
+  // Imágenes de la oferta.
+  IMG: { sale_hero: "images/transform-t1.png", program: "images/mockupapp.png" },
 
   // ====== PLAN (precio único, igual al funnel analizado) ======
   TIERS: [
@@ -394,7 +394,7 @@ var CONFIG = {
   // ====== PASOS DEL QUIZ (relevados del funnel analizado) ======
   STEPS: [
     { type:"cards", key:"edad", phase:"Reclutamiento", h:"Selecciona tu <span class='am'>edad</span> para comenzar", sub:"Este programa está diseñado para adaptarse a tu nivel de condición física y edad actual.", cols:2, opts:[
-      {t:"Edad: 18 - 29", img:""},{t:"Edad: 30 - 39", img:""},{t:"Edad: 40 - 49", img:""},{t:"Edad: 50+", img:""}] },
+      {t:"Edad: 18 - 29", img:"images/edad-18-29.png"},{t:"Edad: 30 - 39", img:"images/edad-30-39.png"},{t:"Edad: 40 - 49", img:"images/edad-40-49.png"},{t:"Edad: 50+", img:"images/edad-50plus.png"}] },
     { type:"cards", key:"goal", phase:"Cuestionario", h:"¿Cuál es tu <span class='am'>objetivo principal</span>?", cols:1, opts:[
       {t:"Perder peso"},{t:"Ganar músculo"},{t:"Perder grasa y ganar músculo"},{t:"Mejorar la condición física general"}] },
     { type:"cards", key:"bodygoal", phase:"Cuestionario", h:"¿Cuál es tu <span class='am'>objetivo corporal</span>?", cols:2, opts:[
