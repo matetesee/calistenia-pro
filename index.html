@@ -6,6 +6,11 @@
 <title>Calistenia Pro — Tu Protocolo Personalizado de 21 Días</title>
 <meta name="description" content="Descubrí tu protocolo personalizado de calistenia militar. Físico marcado en 21 días, sin salir de casa, adaptado a tu edad.">
 <meta name="robots" content="noindex">
+<style>
+  /* Fondo de página oscuro (igual al original) para que no se vean bordes
+     blancos alrededor de la tarjeta del quiz en pantallas anchas (PC). */
+  html,body{margin:0;background:#0A0C0A;min-height:100%}
+</style>
 <!--
   Meta Pixel: todavía no conectado (placeholder).
   Cuando tengas el Pixel ID, pegá acá el snippet estándar de Meta
@@ -395,12 +400,12 @@ var CONFIG = {
   STEPS: [
     { type:"cards", key:"edad", phase:"Reclutamiento", h:"Selecciona tu <span class='am'>edad</span> para comenzar", sub:"Este programa está diseñado para adaptarse a tu nivel de condición física y edad actual.", cols:2, opts:[
       {t:"Edad: 18 - 29", img:"images/edad-18-29.png"},{t:"Edad: 30 - 39", img:"images/edad-30-39.png"},{t:"Edad: 40 - 49", img:"images/edad-40-49.png"},{t:"Edad: 50+", img:"images/edad-50plus.png"}] },
-    { type:"cards", key:"goal", phase:"Cuestionario", h:"¿Cuál es tu <span class='am'>objetivo principal</span>?", cols:1, opts:[
-      {t:"Perder peso"},{t:"Ganar músculo"},{t:"Perder grasa y ganar músculo"},{t:"Mejorar la condición física general"}] },
+    { type:"cards", key:"goal", phase:"Cuestionario", h:"¿Cuál es tu <span class='am'>objetivo principal</span>?", cols:2, opts:[
+      {t:"Perder peso", img:"images/goal-perder.jpg"},{t:"Ganar músculo", img:"images/goal-ganar.jpg"},{t:"Perder grasa y ganar músculo", img:"images/goal-ganareperder.jpg"},{t:"Mejorar la condición física general", img:"images/goal-mejorar.jpg"}] },
     { type:"cards", key:"bodygoal", phase:"Cuestionario", h:"¿Cuál es tu <span class='am'>objetivo corporal</span>?", cols:2, opts:[
-      {t:"Delgado", img:""},{t:"Atlético", img:""},{t:"Marcado", img:""},{t:"Fuerte", img:""}] },
+      {t:"Delgado", img:"images/bodygoal-slim.webp"},{t:"Atlético", img:"images/bodygoal-athletic.webp"},{t:"Marcado", img:"images/bodygoal-definied.webp"},{t:"Fuerte", img:"images/bodygoal-fuerte.webp"}] },
     { type:"multi", key:"zonas", phase:"Cuestionario", h:"¿En qué <span class='am'>zona</span> querés enfocarte?", sub:"Elegí todas las que apliquen", opts:[
-      {t:"Pectorales"},{t:"Brazos"},{t:"Abdomen"},{t:"Piernas"}] },
+      {t:"Pectorales", img:"images/zona-chest.webp"},{t:"Brazos", img:"images/zona-brazos.webp"},{t:"Abdomen", img:"images/zona-abdomen.webp"},{t:"Piernas", img:"images/zona-piernas.webp"}] },
     { type:"cards", key:"frecuencia", phase:"Cuestionario", h:"¿Cuántas veces por semana te gustaría <span class='am'>entrenar</span>?", cols:1, opts:[
       {t:"📅 1-2 veces"},{t:"💪 3-4 veces"},{t:"🔥 5 o más veces"}] },
     { type:"inter", phase:"Resultados verificados", icon:"🎖️", h:"Esto va a <span class='am'>pasarte a ti</span>",
@@ -454,8 +459,13 @@ function render(){
     return;
   }
   if(s.type==='multi'||s.type==='empathy'){
-    html+='<div class="sp-grid">';
-    s.opts.forEach(function(o,idx){ html+='<div class="sp-card row" data-i="'+idx+'"><div class="sp-label">'+esc(o.t)+'</div><span class="sp-check">✓</span></div>'; });
+    var hasImgM=s.opts.some(function(o){return o.img;});
+    html+='<div class="sp-grid '+(hasImgM?'cols2':'')+'">';
+    s.opts.forEach(function(o,idx){
+      if(hasImgM){ html+='<div class="sp-card" data-i="'+idx+'">'+thumb(o.img,o.t)+
+        '<div class="sp-label" style="display:flex;align-items:center;justify-content:space-between;gap:8px">'+esc(o.t)+'<span class="sp-check" style="margin:0;flex:none">✓</span></div></div>'; }
+      else { html+='<div class="sp-card row" data-i="'+idx+'"><div class="sp-label">'+esc(o.t)+'</div><span class="sp-check">✓</span></div>'; }
+    });
     html+='</div>';
     if(s.type==='empathy') html+='<div id="spBox" style="display:none"><div class="sp-empathy"><b>'+esc(s.box.title)+'</b><p>'+esc(s.box.text)+'</p></div></div>';
     html+='<button class="sp-cta" id="spNext" disabled>Continuar</button>';
