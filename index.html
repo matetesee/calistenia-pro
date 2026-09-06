@@ -469,8 +469,11 @@ var CONFIG = {
   IMG: { sale_hero: "images/transform-t1.png", program: "images/mockupapp.png" },
 
   // ====== PLAN (precio único, igual al funnel analizado) ======
+  // oldUsd/nowUsd son la base en USD: el precio real que ve cada visitante
+  // se convierte en vivo a su moneda local según su país (ver MONEDA LOCAL
+  // más abajo). Argentina usa un precio fijo en ARS en vez de conversión.
   TIERS: [
-    { name:"PROTOCOLO CALISTENIA PRO", old:"$49.90 antes", now:"$7.90", perday:"0.26", off:"84% OFF",
+    { name:"PROTOCOLO CALISTENIA PRO", oldUsd:49.90, nowUsd:9.90,
       bonus:"🎁 +$137.70 en bonos incluidos gratis", variantId:"", popular:true }
   ],
 
@@ -513,6 +516,112 @@ var CONFIG = {
   ]
 };
 /* ================= FIN CONFIG (no toques abajo) ================= */
+
+/* ================= MONEDA LOCAL SEGUN PAIS (IP) ================= */
+// Mismo esquema que soonbody-tai-chi: detecta el país por IP y muestra el
+// precio convertido a la moneda local en vivo (cotización del día), excepto
+// Argentina que usa un precio fijo en ARS (evita que varíe con el dólar).
+var CURRENCY = { code:'USD', rate:1, locale:'en-US', country:'', ready:false };
+var AR_FIXED_PRICE_ARS = 14924; // Argentina: precio fijo, nunca se calcula por cotizacion.
+var FALLBACK_RATES = {
+  USD:1, ARS:1050, BRL:5.6, COP:4300, MXN:18.6, CLP:970, PEN:3.76, UYU:42,
+  PYG:7750, BOB:6.94, VES:47, CRC:512, PAB:1, GTQ:7.7, HNL:25.6, NIO:36.8,
+  DOP:60.5, EUR:0.92, GBP:0.79, CAD:1.38, AUD:1.52, INR:83.9
+};
+var LOCALE_BY_COUNTRY = {
+  AR:'es-AR', BR:'pt-BR', CO:'es-CO', MX:'es-MX', CL:'es-CL', PE:'es-PE',
+  UY:'es-UY', PY:'es-PY', BO:'es-BO', VE:'es-VE', CR:'es-CR', PA:'es-PA',
+  GT:'es-GT', HN:'es-HN', SV:'es-SV', NI:'es-NI', DO:'es-DO', EC:'es-EC',
+  US:'en-US', ES:'es-ES', GB:'en-GB', CA:'en-CA', AU:'en-AU', IN:'en-IN'
+};
+var ZERO_DECIMAL_CUR = {ARS:1,COP:1,CLP:1,PYG:1,VES:1};
+function fetchWithTimeout(url, ms){
+  return Promise.race([
+    fetch(url),
+    new Promise(function(_,rej){ setTimeout(function(){ rej(new Error('timeout')); }, ms); })
+  ]);
+}
+function detectCurrency(){
+  return new Promise(function(resolve){
+    var done=false;
+    function finish(cur){ if(done) return; done=true; resolve(cur); }
+    function withRate(code, country){
+      code = (code||'USD').toUpperCase();
+      if(code==='USD'){ finish({code:'USD', rate:1, locale:LOCALE_BY_COUNTRY[country]||'en-US', country:country||''}); return; }
+      fetchWithTimeout('https://open.er-api.com/v6/latest/USD', 3500)
+        .then(function(r){ return r.json(); })
+        .then(function(d){
+          var rate = d && d.rates && d.rates[code];
+          if(!rate) rate = FALLBACK_RATES[code];
+          finish(rate ? {code:code, rate:rate, locale:LOCALE_BY_COUNTRY[country]||'en-US', country:country||''} : {code:'USD', rate:1, locale:'en-US', country:country||''});
+        })
+        .catch(function(){
+          var rate = FALLBACK_RATES[code];
+          finish(rate ? {code:code, rate:rate, locale:LOCALE_BY_COUNTRY[country]||'en-US', country:country||''} : {code:'USD', rate:1, locale:'en-US', country:country||''});
+        });
+    }
+    fetchWithTimeout('https://ipapi.co/json/', 3000)
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        if(d && d.currency && d.country_code){ withRate(d.currency, d.country_code); }
+        else { throw new Error('sin moneda'); }
+      })
+      .catch(function(){
+        fetchWithTimeout('https://ipwho.is/', 3000)
+          .then(function(r){ return r.json(); })
+          .then(function(d){
+            var code = d && d.currency && d.currency.code;
+            var country = d && d.country_code;
+            if(code && country){ withRate(code, country); }
+            else { finish({code:'USD', rate:1, locale:'en-US', country:''}); }
+          })
+          .catch(function(){ finish({code:'USD', rate:1, locale:'en-US', country:''}); });
+      });
+    setTimeout(function(){ finish({code:'USD', rate:1, locale:'en-US', country:''}); }, 5000);
+  });
+}
+function fmtPrice(usd){
+  if(!CURRENCY.ready || CURRENCY.code==='USD' || !CURRENCY.rate){ return '$'+usd.toFixed(2); }
+  var amount = usd*CURRENCY.rate;
+  try{
+    return new Intl.NumberFormat(CURRENCY.locale, {
+      style:'currency', currency:CURRENCY.code,
+      maximumFractionDigits: ZERO_DECIMAL_CUR[CURRENCY.code] ? 0 : 2,
+      minimumFractionDigits: ZERO_DECIMAL_CUR[CURRENCY.code] ? 0 : 2
+    }).format(amount);
+  }catch(e){ return '$'+usd.toFixed(2); }
+}
+function fmtNowPrice(usd){
+  // Argentina: precio fijo en pesos argentinos, nunca se recalcula por cotizacion del dolar.
+  if(CURRENCY.country==='AR'){
+    try{
+      return new Intl.NumberFormat('es-AR', { style:'currency', currency:'ARS', maximumFractionDigits:0, minimumFractionDigits:0 }).format(AR_FIXED_PRICE_ARS);
+    }catch(e){ return '$'+AR_FIXED_PRICE_ARS; }
+  }
+  return fmtPrice(usd);
+}
+function repaintPrices(){
+  var tier=CONFIG.TIERS[state?state.tier:0]||CONFIG.TIERS[0]; if(!tier) return;
+  var oldEl=document.getElementById('tierOld'), nowEl=document.getElementById('tierNow');
+  if(oldEl) oldEl.textContent=fmtPrice(tier.oldUsd);
+  if(nowEl) nowEl.textContent=fmtNowPrice(tier.nowUsd);
+}
+var CURRENCY_CACHE_KEY='sp_currency_v1';
+(function initCurrency(){
+  try{
+    var cached=JSON.parse(localStorage.getItem(CURRENCY_CACHE_KEY)||'null');
+    if(cached && cached.ts && (Date.now()-cached.ts < 12*3600*1000)){
+      CURRENCY=cached; CURRENCY.ready=true; repaintPrices();
+      return;
+    }
+  }catch(e){}
+  detectCurrency().then(function(cur){
+    CURRENCY=cur; CURRENCY.ready=true;
+    try{ localStorage.setItem(CURRENCY_CACHE_KEY, JSON.stringify(Object.assign({ts:Date.now()},cur))); }catch(e){}
+    repaintPrices();
+  });
+})();
+/* ================= FIN MONEDA LOCAL ================= */
 
 var stage=document.getElementById('spStage'), backBtn=document.getElementById('spBack');
 var _pop=CONFIG.TIERS.findIndex(function(t){return t.popular;});
@@ -686,13 +795,14 @@ function renderSale(){
   var hero=CONFIG.IMG.sale_hero?'<img src="'+CONFIG.IMG.sale_hero+'" alt="">':'IMAGEN ANTES / DESPUÉS';
   var tiers='';
   CONFIG.TIERS.forEach(function(t,idx){
+    var offPct=t.oldUsd?Math.round((1-t.nowUsd/t.oldUsd)*100)+'% OFF':'';
     tiers+='<div class="sp-tier'+(t.popular?' pop':'')+(idx===state.tier?' sel':'')+'" data-i="'+idx+'">'+
       (t.popular?'<span class="sp-pop">★ Más elegido</span>':'')+
       '<div class="sp-tier-row"><div><span class="sp-radio"></span>'+
       '<span class="sp-tier-name">'+esc(t.name)+'</span><br>'+
-      (t.old?'<span class="sp-tier-old">'+esc(t.old)+'</span>':'')+'<span class="sp-tier-now">'+esc(t.now)+'</span>'+
-      (t.off?'<br><span class="sp-off">'+esc(t.off)+'</span>':'')+
-      '</div><div class="sp-perday"><div class="pd">'+esc(t.perday)+'</div><div class="u">USD/día</div></div></div>'+
+      (t.oldUsd?'<span class="sp-tier-old" id="tierOld">'+fmtPrice(t.oldUsd)+'</span>':'')+'<span class="sp-tier-now" id="tierNow">'+fmtNowPrice(t.nowUsd)+'</span>'+
+      (offPct?'<br><span class="sp-off">'+offPct+'</span>':'')+
+      '</div><div class="sp-perday"><div class="pd">🔓</div><div class="u">DE POR VIDA</div></div></div>'+
       (t.bonus?'<div class="sp-bonus">'+esc(t.bonus)+'</div>':'')+'</div>';
   });
   var incl=(CONFIG.INCLUDES||[]).map(function(x){return '<li><span class="ck">✔</span><span>'+esc(x)+'</span></li>';}).join('');
