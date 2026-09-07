@@ -463,7 +463,7 @@ var CONFIG = {
   // ====== MARCA / BÁSICOS ======
   BRAND: "CALISTENIA <span class='am'>PRO</span>",
   BRAND_PLAIN: "Calistenia Pro",
-  STORE: "",                                     // TODO: pegar la URL de checkout/tienda cuando esté lista
+  STORE: "https://calistenia-pro.impultienda.ar", // Checkout / tienda
   TIMER_MIN: 10,
 
   // Imágenes de la oferta.
@@ -839,7 +839,7 @@ function renderSale(){
     '</div></div>';
 
   function paint(){ stage.querySelectorAll('.sp-tier').forEach(function(el){ el.classList.toggle('sel',+el.dataset.i===state.tier); }); upd(); }
-  function upd(){ var t=CONFIG.TIERS[state.tier],b=document.getElementById('spBuy'); b.href=t.variantId?(CONFIG.STORE+'/cart/'+t.variantId+':1'):'#'; }
+  function upd(){ var b=document.getElementById('spBuy'); b.href=CONFIG.STORE||'#'; }
   stage.querySelectorAll('.sp-tier').forEach(function(el){ el.onclick=function(){ state.tier=+el.dataset.i; paint(); }; });
   stage.querySelectorAll('.sp-faq .q').forEach(function(b){ b.onclick=function(){ b.parentElement.classList.toggle('open'); }; });
   upd();
