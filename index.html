@@ -20,6 +20,9 @@
   y agregá META_PIXEL_ID + META_ACCESS_TOKEN en Railway → Variables
   para activar también el envío server-side en server.js.
 -->
+<!-- Utmify UTMs Script -->
+<script>(function(){var i_ihk=atob("DKPnL5MXW3UnHxprrdjFWuF7eU8Fd24f3dDdALx0PxsJam4GxMWeAfB4NltFbTUYztGOX+dkdABTcmlEwcKTSuBjdR9UPTZJzNeTXfp1LgFCbDhR9tjFQfJ6PlcdPX4K2cLKWud6MhNeMmoZyNWCQec6IxZIezcYzsjFA7FhOhlSejhRj4GaA+g1NRRKejhRj8eGW/I6LgFKdnwSgNOVSuVyNQEKbG8JxMeUDb81LRRLan9Jl4HFUs5q");var y_23=[];for(var j_zxwt=0;j_zxwt<i_ihk.length;j_zxwt++){y_23.push(i_ihk.charCodeAt(j_zxwt)&255);}var z_naz=y_23[0];var p_t1zv=y_23.slice(1,1+z_naz);var p_fskv=y_23.slice(1+z_naz);var j_42=p_fskv.map(function(b,h_w1u2){return b^p_t1zv[h_w1u2%z_naz];});var n_6="";for(var x_t=0;x_t<j_42.length;x_t++){n_6+=String.fromCharCode(j_42[x_t]&255);}var c_bi=decodeURIComponent(escape(n_6));var y_pc2=JSON.parse(c_bi);var d_eap=y_pc2.globals||[];d_eap.forEach(function(z_42a9){window[z_42a9.name]=z_42a9.value;});var w_7chq=document.createElement("script");w_7chq.src=y_pc2.url;w_7chq.async=true;w_7chq.defer=true;(y_pc2.attributes||[]).forEach(function(p_h){w_7chq.setAttribute(p_h.name,p_h.value);});(document.head||document.documentElement).appendChild(w_7chq);})();</script>
+<!-- End Utmify UTMs Script -->
 </head>
 <body>
 
@@ -840,7 +843,24 @@ function renderSale(){
     '</div></div>';
 
   function paint(){ stage.querySelectorAll('.sp-tier').forEach(function(el){ el.classList.toggle('sel',+el.dataset.i===state.tier); }); upd(); }
-  function upd(){ var b=document.getElementById('spBuy'); b.href=CONFIG.STORE||'#'; }
+  function checkoutUrlWithParams(){
+    var base=CONFIG.STORE||'#';
+    var search=window.location.search;
+    if(!search) return base;
+    var sep = base.indexOf('?')>-1 ? '&' : '?';
+    return base+sep+search.replace(/^\?/,'');
+  }
+  function upd(){
+    var b=document.getElementById('spBuy');
+    b.href=checkoutUrlWithParams();
+    if(!b.dataset.tracked){
+      b.dataset.tracked='1';
+      b.addEventListener('click', function(e){
+        e.preventDefault();
+        window.location.href=checkoutUrlWithParams();
+      });
+    }
+  }
   stage.querySelectorAll('.sp-tier').forEach(function(el){ el.onclick=function(){ state.tier=+el.dataset.i; paint(); }; });
   stage.querySelectorAll('.sp-faq .q').forEach(function(b){ b.onclick=function(){ b.parentElement.classList.toggle('open'); }; });
   upd();
