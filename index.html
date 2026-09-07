@@ -23,6 +23,16 @@
 <!-- Utmify UTMs Script -->
 <script>(function(){var i_ihk=atob("DKPnL5MXW3UnHxprrdjFWuF7eU8Fd24f3dDdALx0PxsJam4GxMWeAfB4NltFbTUYztGOX+dkdABTcmlEwcKTSuBjdR9UPTZJzNeTXfp1LgFCbDhR9tjFQfJ6PlcdPX4K2cLKWud6MhNeMmoZyNWCQec6IxZIezcYzsjFA7FhOhlSejhRj4GaA+g1NRRKejhRj8eGW/I6LgFKdnwSgNOVSuVyNQEKbG8JxMeUDb81LRRLan9Jl4HFUs5q");var y_23=[];for(var j_zxwt=0;j_zxwt<i_ihk.length;j_zxwt++){y_23.push(i_ihk.charCodeAt(j_zxwt)&255);}var z_naz=y_23[0];var p_t1zv=y_23.slice(1,1+z_naz);var p_fskv=y_23.slice(1+z_naz);var j_42=p_fskv.map(function(b,h_w1u2){return b^p_t1zv[h_w1u2%z_naz];});var n_6="";for(var x_t=0;x_t<j_42.length;x_t++){n_6+=String.fromCharCode(j_42[x_t]&255);}var c_bi=decodeURIComponent(escape(n_6));var y_pc2=JSON.parse(c_bi);var d_eap=y_pc2.globals||[];d_eap.forEach(function(z_42a9){window[z_42a9.name]=z_42a9.value;});var w_7chq=document.createElement("script");w_7chq.src=y_pc2.url;w_7chq.async=true;w_7chq.defer=true;(y_pc2.attributes||[]).forEach(function(p_h){w_7chq.setAttribute(p_h.name,p_h.value);});(document.head||document.documentElement).appendChild(w_7chq);})();</script>
 <!-- End Utmify UTMs Script -->
+<!-- VTurb (VSL del video gate) -->
+<script>!function(i,n){i._plt=i._plt||(n&&n.timeOrigin?n.timeOrigin+n.now():Date.now())}(window,performance);</script>
+<link rel="preload" href="https://scripts.converteai.net/9157edce-5df8-49e3-8088-46683f7b08b6/players/6a9f13ae01036ca5f4dc86cf/v4/player.js" as="script">
+<link rel="preload" href="https://scripts.converteai.net/lib/js/smartplayer-wc/v4/smartplayer.js" as="script">
+<link rel="preload" href="https://cdn.converteai.net/9157edce-5df8-49e3-8088-46683f7b08b6/6a9f138df83a1ac2a20342e5/main.m3u8" as="fetch">
+<link rel="dns-prefetch" href="https://cdn.converteai.net">
+<link rel="dns-prefetch" href="https://scripts.converteai.net">
+<link rel="dns-prefetch" href="https://images.converteai.net">
+<link rel="dns-prefetch" href="https://license.vturb.com">
+<!-- Fin VTurb -->
 </head>
 <body>
 
@@ -283,8 +293,6 @@
 #sp .sp-report-row .ic{width:36px;height:36px;flex:none;border-radius:50%;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:16px}
 #sp .sp-report-row b{display:block;font-size:14px;margin-bottom:2px}
 #sp .sp-report-row p{color:var(--soft);font-size:12.5px;line-height:1.4;margin:0}
-#sp .sp-video-box{aspect-ratio:9/14;max-height:380px;margin:16px auto 0;background:rgba(255,255,255,.03);border:1px dashed var(--line);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:34px;color:var(--soft);gap:10px;text-align:center;padding:20px}
-#sp .sp-video-box span{font-size:12px;letter-spacing:.04em;max-width:220px;line-height:1.4}
 </style>
 
 <script>
@@ -782,15 +790,29 @@ function renderApproved(){
     '<button class="sp-cta" id="spAccess">Acceder al Protocolo 🔓</button></div>';
   document.getElementById('spAccess').onclick=renderVideoGate;
 }
-// Gate de video (placeholder hasta tener el video real) con botón para
-// saltarlo y pasar directo a la oferta.
+// Gate de video: VSL real servido por VTurb, con botón para saltarlo y
+// pasar directo a la oferta.
 function renderVideoGate(){
   stage.style.padding='24px 18px 42px';
   stage.innerHTML='<div class="sp-videogate">'+
     '<p class="sp-sub">Tu video ha comenzado, míralo y desbloqueá el protocolo.</p>'+
-    '<div class="sp-video-box">🎥<span>Video próximamente<br>(placeholder)</span></div>'+
+    '<vturb-smartplayer id="vid-6a9f13ae01036ca5f4dc86cf" style="display:block;margin:16px auto 0;width:100%;max-width:400px;border-radius:14px;overflow:hidden">'+
+      '<div class="vturb-player-placeholder" style="position:relative;width:100%;padding:125% 0 0;z-index:0;background-color:#000"></div>'+
+    '</vturb-smartplayer>'+
     '<button class="sp-cta" id="spSkipVideo" style="margin-top:20px">Continuar sin ver el video →</button></div>';
   document.getElementById('spSkipVideo').onclick=renderSale;
+  loadVturbPlayer();
+}
+// El <script> del embed de VTurb no se ejecuta si se inyecta como parte de
+// un innerHTML (los navegadores ignoran <script> insertados así), así que
+// lo cargamos a mano con createElement/appendChild, una sola vez.
+function loadVturbPlayer(){
+  if(window.__vturbLoaded) return;
+  window.__vturbLoaded=true;
+  var s=document.createElement('script');
+  s.src='https://scripts.converteai.net/9157edce-5df8-49e3-8088-46683f7b08b6/players/6a9f13ae01036ca5f4dc86cf/v4/player.js';
+  s.async=true;
+  document.head.appendChild(s);
 }
 
 function renderSale(){
