@@ -790,17 +790,14 @@ function renderApproved(){
     '<button class="sp-cta" id="spAccess">Acceder al Protocolo 🔓</button></div>';
   document.getElementById('spAccess').onclick=renderVideoGate;
 }
-// Gate de video: VSL real servido por VTurb, con botón para saltarlo y
-// pasar directo a la oferta.
+// Gate de video: VSL real servido por VTurb, sin botón para saltarlo.
 function renderVideoGate(){
   stage.style.padding='24px 18px 42px';
   stage.innerHTML='<div class="sp-videogate">'+
     '<p class="sp-sub">Tu video ha comenzado, míralo y desbloqueá el protocolo.</p>'+
     '<vturb-smartplayer id="vid-6a9f13ae01036ca5f4dc86cf" style="display:block;margin:16px auto 0;width:100%;max-width:400px;border-radius:14px;overflow:hidden">'+
       '<div class="vturb-player-placeholder" style="position:relative;width:100%;padding:125% 0 0;z-index:0;background-color:#000"></div>'+
-    '</vturb-smartplayer>'+
-    '<button class="sp-cta" id="spSkipVideo" style="margin-top:20px">Continuar sin ver el video →</button></div>';
-  document.getElementById('spSkipVideo').onclick=renderSale;
+    '</vturb-smartplayer></div>';
   loadVturbPlayer();
 }
 // El <script> del embed de VTurb no se ejecuta si se inyecta como parte de
