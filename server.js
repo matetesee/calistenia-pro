@@ -71,8 +71,20 @@ function sendMetaCapiEvent(body, req) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(payload) },
   };
-  const capiReq = https.request(options, (capiRes) => { capiRes.on('data', () => {}); });
-  capiReq.on('error', () => { /* fallo silencioso: no debe romper el quiz */ });
+  const capiReq = https.request(options, (capiRes) => {
+    let resBody = '';
+    capiRes.on('data', (chunk) => { resBody += chunk; });
+    capiRes.on('end', () => {
+      // No rompe el quiz si falla, pero deja rastro en los logs de Railway
+      // (antes esto se descartaba en silencio y un token roto no se notaba nunca).
+      if (capiRes.statusCode >= 400) {
+        console.error('[CAPI] Meta rechazó el evento', data.eventName, '-', capiRes.statusCode, resBody);
+      } else {
+        console.log('[CAPI] evento enviado:', data.eventName, resBody);
+      }
+    });
+  });
+  capiReq.on('error', (err) => { console.error('[CAPI] error de red enviando el evento', data.eventName, '-', err.message); });
   capiReq.write(payload);
   capiReq.end();
 }
