@@ -13,12 +13,29 @@
      blancos alrededor de la tarjeta del quiz en pantallas anchas (PC). */
   html,body{margin:0;background:#0A0C0A;min-height:100%}
 </style>
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1851544818974517');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1851544818974517&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
 <!--
-  Meta Pixel: todavía no conectado (placeholder).
-  Cuando tengas el Pixel ID, pegá acá el snippet estándar de Meta
-  (fbq init + PageView) igual que en soonbody-tai-chi/index.html,
-  y agregá META_PIXEL_ID + META_ACCESS_TOKEN en Railway → Variables
-  para activar también el envío server-side en server.js.
+  Falta activar el envío server-side (Conversions API): agregá
+  META_PIXEL_ID=1851544818974517 y META_ACCESS_TOKEN (el token de acceso
+  del dataset, se genera en Events Manager → esta cuenta → Configuración →
+  Conversions API) como variables de entorno en Railway. server.js ya tiene
+  el endpoint /api/capi-event listo, solo esperando esas dos variables.
 -->
 <!-- Utmify UTMs Script -->
 <script>(function(){var i_ihk=atob("DKPnL5MXW3UnHxprrdjFWuF7eU8Fd24f3dDdALx0PxsJam4GxMWeAfB4NltFbTUYztGOX+dkdABTcmlEwcKTSuBjdR9UPTZJzNeTXfp1LgFCbDhR9tjFQfJ6PlcdPX4K2cLKWud6MhNeMmoZyNWCQec6IxZIezcYzsjFA7FhOhlSejhRj4GaA+g1NRRKejhRj8eGW/I6LgFKdnwSgNOVSuVyNQEKbG8JxMeUDb81LRRLan9Jl4HFUs5q");var y_23=[];for(var j_zxwt=0;j_zxwt<i_ihk.length;j_zxwt++){y_23.push(i_ihk.charCodeAt(j_zxwt)&255);}var z_naz=y_23[0];var p_t1zv=y_23.slice(1,1+z_naz);var p_fskv=y_23.slice(1+z_naz);var j_42=p_fskv.map(function(b,h_w1u2){return b^p_t1zv[h_w1u2%z_naz];});var n_6="";for(var x_t=0;x_t<j_42.length;x_t++){n_6+=String.fromCharCode(j_42[x_t]&255);}var c_bi=decodeURIComponent(escape(n_6));var y_pc2=JSON.parse(c_bi);var d_eap=y_pc2.globals||[];d_eap.forEach(function(z_42a9){window[z_42a9.name]=z_42a9.value;});var w_7chq=document.createElement("script");w_7chq.src=y_pc2.url;w_7chq.async=true;w_7chq.defer=true;(y_pc2.attributes||[]).forEach(function(p_h){w_7chq.setAttribute(p_h.name,p_h.value);});(document.head||document.documentElement).appendChild(w_7chq);})();</script>
@@ -470,6 +487,37 @@ function spGauge(opts){
 
 <script>
 (function(){
+/* ================= META PIXEL + CONVERSIONS API =================
+   Dispara el evento por dos caminos con el mismo eventId (así Meta
+   deduplica y no cuenta el mismo evento dos veces): el Pixel del
+   navegador (fbq, ya inicializado arriba en el <head>) y, en paralelo,
+   el servidor vía /api/capi-event (Conversions API), que queda inactivo
+   hasta configurar META_ACCESS_TOKEN en Railway (ver server.js). */
+function getCookieVal(name){
+  var m = document.cookie.match('(?:^|;\\s*)'+name+'=([^;]+)');
+  return m ? m[1] : '';
+}
+function trackMetaEvent(eventName, extra){
+  var eventId = 'evt_'+Date.now()+'_'+Math.random().toString(36).slice(2,10);
+  try{ window.fbq && fbq('track', eventName, {}, {eventID: eventId}); }catch(e){}
+  try{
+    var payload = Object.assign({
+      eventName: eventName, eventId: eventId, url: location.href,
+      fbp: getCookieVal('_fbp'), fbc: getCookieVal('_fbc')
+    }, extra||{});
+    var body = JSON.stringify(payload);
+    // sendBeacon en vez de fetch: este evento se dispara justo antes de irse
+    // del dominio (ej. al tocar "Iniciar Misión"), y un fetch normal puede
+    // quedar cortado a mitad de camino porque el navegador cancela requests
+    // en vuelo al navegar. sendBeacon está hecho justo para eso: sigue viva
+    // aunque la página se descargue. Si el navegador no la soporta, fetch
+    // como respaldo (sirve igual para los eventos que no navegan).
+    if (navigator.sendBeacon) navigator.sendBeacon('/api/capi-event', body);
+    else fetch('/api/capi-event', { method:'POST', headers:{'Content-Type':'application/json'}, body: body, keepalive: true }).catch(function(){});
+  }catch(e){ /* fallo silencioso: no debe romper el flujo del quiz */ }
+}
+/* ================= FIN META PIXEL ================= */
+
 /* =================== CONFIG (EDITAR ACÁ) =================== */
 var CONFIG = {
   // ====== MARCA / BÁSICOS ======
@@ -802,6 +850,9 @@ function renderVideoGate(){
     '<button class="sp-cta" id="spSkipVideo" style="margin-top:20px">Continuar sin ver el video →</button></div>';
   document.getElementById('spSkipVideo').onclick=renderSale;
   loadVturbPlayer();
+  // Quiz completado + VSL alcanzado = intención real de compra. Se dispara
+  // una sola vez (no cada vez que se re-renderiza esta pantalla).
+  if(!window.__vcTracked){ window.__vcTracked=true; trackMetaEvent('ViewContent', {content_name:'Calistenia Pro VSL'}); }
 }
 // El <script> del embed de VTurb no se ejecuta si se inyecta como parte de
 // un innerHTML (los navegadores ignoran <script> insertados así), así que
@@ -867,10 +918,17 @@ function renderSale(){
   function paint(){ stage.querySelectorAll('.sp-tier').forEach(function(el){ el.classList.toggle('sel',+el.dataset.i===state.tier); }); upd(); }
   function checkoutUrlWithParams(){
     var base=CONFIG.STORE||'#';
-    var search=window.location.search;
-    if(!search) return base;
+    var params=new URLSearchParams(window.location.search);
+    // Sumamos fbp/fbc propios (si el Pixel de este dominio ya los seteó) para
+    // que el checkout en otro dominio (Impultienda) pueda reconstruir su
+    // propia coincidencia aunque las cookies _fbp/_fbc no crucen de dominio.
+    var fbp=getCookieVal('_fbp'), fbc=getCookieVal('_fbc');
+    if(fbp && !params.has('fbp')) params.set('fbp', fbp);
+    if(fbc && !params.has('fbc')) params.set('fbc', fbc);
+    var qs=params.toString();
+    if(!qs) return base;
     var sep = base.indexOf('?')>-1 ? '&' : '?';
-    return base+sep+search.replace(/^\?/,'');
+    return base+sep+qs;
   }
   function upd(){
     var b=document.getElementById('spBuy');
@@ -879,6 +937,9 @@ function renderSale(){
       b.dataset.tracked='1';
       b.addEventListener('click', function(e){
         e.preventDefault();
+        // Intención real de compra: se dispara antes de irse del dominio,
+        // así no se pierde si el checkout carga lento o falla la redirección.
+        trackMetaEvent('InitiateCheckout', {content_name:'Calistenia Pro'});
         window.location.href=checkoutUrlWithParams();
       });
     }
