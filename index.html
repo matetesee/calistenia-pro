@@ -530,12 +530,13 @@ var CONFIG = {
   IMG: { sale_hero: "images/transform-t1.png", program: "images/mockupapp.png" },
 
   // ====== PLAN (precio único, igual al funnel analizado) ======
-  // oldUsd/nowUsd son la base en USD: el precio real que ve cada visitante
-  // se convierte en vivo a su moneda local según su país (ver MONEDA LOCAL
-  // más abajo). Argentina usa un precio fijo en ARS en vez de conversión.
+  // oldUsd/nowUsd: quedan como referencia del precio real que se cobra en el
+  // checkout (Impultienda), pero PROVISORIAMENTE no se muestran en el quiz
+  // (test: el precio en esta pantalla parecía estar bajando las ventas) —
+  // ver el bloque "Elegí tu plan" en renderSale().
   TIERS: [
     { name:"PROTOCOLO CALISTENIA PRO", oldUsd:49.90, nowUsd:9.90,
-      bonus:"🎁 +$137.70 en bonos incluidos gratis", variantId:"", popular:true }
+      bonus:"🎁 Bonos incluidos gratis", variantId:"", popular:true }
   ],
 
   // ====== OFERTA ======
@@ -873,15 +874,15 @@ function renderSale(){
   var name=state.answers.name?esc(state.answers.name):'recluta';
   var brand=esc(CONFIG.BRAND_PLAIN);
   var hero=CONFIG.IMG.sale_hero?'<img src="'+CONFIG.IMG.sale_hero+'" alt="">':'IMAGEN ANTES / DESPUÉS';
+  // PROVISORIO: sin precio en esta pantalla (test — parecía frenar ventas).
+  // Se muestra "acceso de por vida" en vez de números y el botón manda
+  // directo al checkout, que sigue mostrando el precio real de Impultienda.
   var tiers='';
   CONFIG.TIERS.forEach(function(t,idx){
-    var offPct=t.oldUsd?Math.round((1-t.nowUsd/t.oldUsd)*100)+'% OFF':'';
     tiers+='<div class="sp-tier'+(t.popular?' pop':'')+(idx===state.tier?' sel':'')+'" data-i="'+idx+'">'+
       (t.popular?'<span class="sp-pop">★ Más elegido</span>':'')+
       '<div class="sp-tier-row"><div><span class="sp-radio"></span>'+
-      '<span class="sp-tier-name">'+esc(t.name)+'</span><br>'+
-      (t.oldUsd?'<span class="sp-tier-old" id="tierOld">'+fmtPrice(t.oldUsd)+'</span>':'')+'<span class="sp-tier-now" id="tierNow">'+fmtNowPrice(t.nowUsd)+'</span>'+
-      (offPct?'<br><span class="sp-off">'+offPct+'</span>':'')+
+      '<span class="sp-tier-name">'+esc(t.name)+'</span>'+
       '</div><div class="sp-perday"><div class="pd">🔓</div><div class="u">DE POR VIDA</div></div></div>'+
       (t.bonus?'<div class="sp-bonus">'+esc(t.bonus)+'</div>':'')+'</div>';
   });
@@ -909,7 +910,7 @@ function renderSale(){
     '<div class="sp-won">🎉 <b>¡Ganaste el mayor descuento!</b><br><span style="font-size:13px;color:var(--soft)">Aplicado a tu protocolo por tiempo limitado</span></div>'+
     inclSec + progSec + howSec +
     '<div class="sp-sec"><h2 class="sp-sec-h">Elegí tu <span class="am">plan</span></h2>'+tiers+
-    '<a class="sp-cta" id="spBuy" href="#">INICIAR MISIÓN</a></div>'+
+    '<a class="sp-cta" id="spBuy" href="#">ACCEDER AHORA</a></div>'+
     pay +
     '<div class="sp-guar"><span class="g-ic">🛡️</span><div><b style="color:var(--ink)">Garantía de Resultados · 7 días.</b> Si no ves resultados, te devolvemos el 100%. Sin preguntas.</div></div>'+
     authority + tstSec + faqSec +
